@@ -43,3 +43,60 @@ export const deleteTodo = /* GraphQL */ `
     }
   }
 `;
+export const createCalEvent = /* GraphQL */ `
+  mutation CreateCalEvent(
+    $input: CreateCalEventInput!
+    $condition: ModelcalEventConditionInput
+  ) {
+    createCalEvent(input: $input, condition: $condition) {
+      id
+      name
+      details
+      start
+      end
+      time_of_day
+      color
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateCalEvent = /* GraphQL */ `
+  mutation UpdateCalEvent(
+    $input: UpdateCalEventInput!
+    $condition: ModelcalEventConditionInput
+  ) {
+    updateCalEvent(input: $input, condition: $condition) {
+      id
+      name
+      details
+      start
+      end
+      time_of_day
+      color
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteCalEvent = /* GraphQL */ `
+  mutation DeleteCalEvent(
+    $input: DeleteCalEventInput!
+    $condition: ModelcalEventConditionInput
+  ) {
+    deleteCalEvent(input: $input, condition: $condition) {
+      id
+      name
+      details
+      start
+      end
+      time_of_day
+      color
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

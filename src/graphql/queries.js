@@ -30,3 +30,42 @@ export const listTodos = /* GraphQL */ `
     }
   }
 `;
+export const getCalEvent = /* GraphQL */ `
+  query GetCalEvent($id: ID!) {
+    getCalEvent(id: $id) {
+      id
+      name
+      details
+      start
+      end
+      time_of_day
+      color
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listCalEvents = /* GraphQL */ `
+  query ListCalEvents(
+    $filter: ModelcalEventFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCalEvents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        details
+        start
+        end
+        time_of_day
+        color
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

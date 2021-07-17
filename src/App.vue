@@ -46,3 +46,8 @@ export default {
   }
 };
 </script>
+<style>
+  :root {
+    --amplify-primary-color: blue;
+  }
+</style>
