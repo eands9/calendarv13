@@ -1,0 +1,20 @@
+type Todo @model {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type calEvent @model @auth(rules: [
+  { allow: groups, groups: ["Admins"], mutations: [create, update, delete], queries: [list, get] },
+  { allow: groups, groups: ["Asst"], mutations: [create], queries: [list, get] },
+  { allow: owner, operations: [read, create, delete, update] }
+  ])
+  {
+    id: ID!
+    name: String!
+    details: String
+    start: String
+    end: String
+    time_of_day: String
+    color: String
+  }

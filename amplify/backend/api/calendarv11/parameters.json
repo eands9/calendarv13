@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "calendarv11",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authcalendarv1114f979be",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
