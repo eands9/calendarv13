@@ -3,6 +3,7 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat color="white">
+            <v-btn color="primary" class="mr-4" @click="dialog=true" dark>Schedule Service</v-btn>
           <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
             Today
           </v-btn>
@@ -44,6 +45,32 @@
             </v-list>
           </v-menu>
         </v-toolbar>
+              <!-- Add Event dialog -->
+      <v-dialog v-model="dialog" max-width="500">
+        <v-card>
+          <v-container>
+            <v-form @submit.prevent="createEvent">
+              <v-text-field v-model="name" type="text" label="Service Needed (required)"></v-text-field>
+              <v-text-field v-model="details" type="text" label="Detail"></v-text-field>
+              <v-text-field v-model="start" type="date" label="Date of Service (required)"></v-text-field>
+              <!-- <v-text-field v-model="end" type="date" label="Morning or Afternoon (required)"></v-text-field> -->
+              <!-- <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field> -->
+              <v-row>
+                <v-col cols="12" sm="6" md="6">
+                  <v-radio-group v-model="time_of_day" column>
+                    <v-radio label="AM" color="blue" value="AM"></v-radio>
+                    <v-radio label="PM" color="blue " value="PM"></v-radio>
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog=false">
+                Create Event
+              </v-btn>
+            </v-form>
+          </v-container>
+
+        </v-card>
+      </v-dialog>
       </v-sheet>
       <v-sheet height="600">
         <v-calendar
@@ -107,6 +134,9 @@
 
 
 <script>
+import { listCalEvents } from "@/graphql/queries";
+import { API } from "aws-amplify";
+import { createCalEvent } from "@/graphql/mutations";
   export default {
     data: () => ({
       focus: '',
@@ -117,32 +147,75 @@
         day: 'Day',
         '4day': '4 Days',
       },
+        name: null,
+        details: null,
+        start: null,
+        end: null,
+        time_of_day: null,
+        color: "#1976D2",
+        currentlyEditing: null,
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
       events: [],
-      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+      dialog: false,
+          names: [],
+    colors: [],
+    //   colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+    //   names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted () {
       this.$refs.calendar.checkChange()
+        this.getCalEvents();
     },
+    // async created() {
+    // this.getCalEvents();
+    // },
     methods: {
+    async getCalEvents() {
+      const calendars = await API.graphql({
+        query: listCalEvents,
+      });
+      this.events = calendars.data.listCalEvents.items;
+    },
+    async createEvent() {
+      const { name, details, start, end, time_of_day, color } = this;
+      const calendar = { name, details, start, end, time_of_day, color };
+ 
+      if (this.name && this.start) {
+        this.end = this.start
+        await API.graphql({
+          query: createCalEvent,
+          variables: { input: calendar },
+        });
+        this.name = "";
+        this.details = "";
+        this.start = "";
+        this.end = "";
+        this.getCalEvents()
+      } else {
+        alert('Name and Start are required')
+      }
+    },
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
+        this.getCalEvents()
       },
       getEventColor (event) {
         return event.color
       },
       setToday () {
         this.focus = ''
+        this.getCalEvents()
       },
       prev () {
         this.$refs.calendar.prev()
+        this.getCalEvents()
       },
       next () {
         this.$refs.calendar.next()
+        this.getCalEvents()
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
@@ -157,7 +230,7 @@
         } else {
           open()
         }
-
+        
         nativeEvent.stopPropagation()
       },
       updateRange ({ start, end }) {

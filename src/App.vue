@@ -48,6 +48,6 @@ export default {
 </script>
 <style>
   :root {
-    --amplify-primary-color: blue;
+    --amplify-primary-color: rgba(19, 89, 194, 0.776);
   }
 </style>
