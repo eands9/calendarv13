@@ -200,22 +200,18 @@ import { createCalEvent } from "@/graphql/mutations";
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
-        this.getCalEvents()
       },
       getEventColor (event) {
         return event.color
       },
       setToday () {
         this.focus = ''
-        this.getCalEvents()
       },
       prev () {
         this.$refs.calendar.prev()
-        this.getCalEvents()
       },
       next () {
         this.$refs.calendar.next()
-        this.getCalEvents()
       },
       showEvent ({ nativeEvent, event }) {
         const open = () => {
@@ -258,6 +254,7 @@ import { createCalEvent } from "@/graphql/mutations";
         }
 
         this.events = events
+        this.getCalEvents()
       },
       rnd (a, b) {
         return Math.floor((b - a + 1) * Math.random()) + a
