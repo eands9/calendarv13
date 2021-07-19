@@ -3,7 +3,7 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat color="white">
-            <v-btn color="primary" class="mr-4" @click="dialog=true" dark>Schedule Service</v-btn>
+            <v-btn color="primary" class="mr-4" @click="dialog=true" dark>Schedule</v-btn>
           <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
             Today
           </v-btn>
@@ -127,17 +127,16 @@
           </v-card>
         </v-menu>
       </v-sheet>
-
     </v-col>
   </v-row>
 </template>
-
 
 <script>
 import { listCalEvents } from "@/graphql/queries";
 import { API } from "aws-amplify";
 import { createCalEvent } from "@/graphql/mutations";
   export default {
+    // props: { showCal: Boolean},
     data: () => ({
       focus: '',
       type: 'month',

@@ -1,15 +1,25 @@
 <template>
   <v-app>
+    <v-app-bar app color="primary" dark>
+      <span class="mx-auto font-weight-light white--text">Simply the Best Services, LLC.</span>
+      <v-spacer></v-spacer>
+      <div class="text-center" v-if="authState === 'signedin' && user.username === 'eands9'">
+        <v-btn @click="setShowEmp" rounded color="primary" dark> Change View </v-btn>
+      </div>
+      <v-spacer></v-spacer>
+      <amplify-sign-out v-if="authState === 'signedin'">
+        </amplify-sign-out>
+    </v-app-bar>
     <v-main>
-      <Nav/>        
-      <Calendar v-if="authState === 'signedin' && user"/>
+              
+      <!-- <Nav />         -->
+      <Calendar v-if="authState === 'signedin' && user && showCal" />
+      <CalendarEmp v-if="authState === 'signedin' && user && showEmp"/>
     </v-main>
     <div>
       <amplify-authenticator>
         <div v-if="authState === 'signedin' && user">
-          <div>Hello, {{user.username}}</div>
         </div>
-        <amplify-sign-out></amplify-sign-out>
       </amplify-authenticator>
     </div>
   </v-app>
@@ -17,17 +27,17 @@
 
 <script>
 import Calendar from './components/Calendar';
-import Nav from './components/Nav';
+import CalendarEmp from './components/CalendarEmp';
+// import Nav from './components/Nav';
 import { onAuthUIStateChange } from '@aws-amplify/ui-components'
 
 export default {
   name: 'App',
-
   components: {
     Calendar,
-    Nav
+    // Nav,
+    CalendarEmp
   },
-
   created() {
     this.unsubscribeAuth = onAuthUIStateChange((authState, authData) => {
       this.authState = authState;
@@ -38,7 +48,15 @@ export default {
     return {
       user: undefined,
       authState: undefined,
-      unsubscribeAuth: undefined
+      unsubscribeAuth: undefined,
+      showCal: true,
+      showEmp: false
+    }
+  },
+  methods: {
+    setShowEmp(){
+      this.showCal = !this.showCal
+      this.showEmp = !this.showEmp
     }
   },
   beforeDestroy() {
